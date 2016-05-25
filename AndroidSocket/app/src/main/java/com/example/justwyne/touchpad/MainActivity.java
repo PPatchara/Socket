@@ -20,25 +20,14 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends Activity {
 
     private Socket socket;
-    private String ip = "172.20.10.3";
-    private int port = 9093;
+    private String ip = "172.20.10.3"; //server ip
+    private int port = 9093; //server port
     PrintWriter out;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         new Thread(new ClientThread()).start();
-    }
-
-    private void prepareSocket(){
-        try {
-            socket = new Socket(ip, port);
-        } catch (IOException ex) {
-            Log.d("Socket", ex.getMessage());
-            Log.d("Socket", ex.getLocalizedMessage());
-            Log.d("Socket", "Error! can't connect to server");
-        }
-
     }
 
     public boolean onTouchEvent(MotionEvent e)
@@ -74,7 +63,6 @@ public class MainActivity extends Activity {
     class ClientThread implements Runnable {
         public void run() {
             try {
-                InetAddress serverAddr = InetAddress.getByName(ip);
                 socket = new Socket(ip, port);
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
