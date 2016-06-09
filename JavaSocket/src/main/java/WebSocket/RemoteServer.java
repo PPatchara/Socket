@@ -57,15 +57,15 @@ public class RemoteServer extends WebSocketServer{
 
         if(stringList[0].equalsIgnoreCase("pos")) {
             controlProcess(stringList);
-        }if (stringList[0].equalsIgnoreCase("s_event")){
+        }
+        if (stringList[0].equalsIgnoreCase("s_event")){
             eventProcess(stringList);
-        } else if(stringList[0].equalsIgnoreCase("tap")){
-            try {
-                clickProcess();
-            } catch (AWTException error) {
-                error.printStackTrace();
-            }
-        } else {
+        }
+        if (stringList[0].equalsIgnoreCase("tap")){
+            control.click();
+        }
+        else {
+
         }
     }
 
@@ -75,10 +75,6 @@ public class RemoteServer extends WebSocketServer{
         if( webSocket != null ) {
             // some errors like port binding failed may not be assignable to a specific websocket
         }
-    }
-
-    private void clickProcess() throws AWTException {
-        control.click();
     }
 
     private void controlProcess(String[] str) {
