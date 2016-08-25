@@ -1,12 +1,10 @@
 package WebSocket;
 
-import org.java_websocket.WebSocketImpl;
-
 import java.awt.AWTException;
-import java.awt.Robot;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 
 import foo.RobotControl;
 
@@ -16,7 +14,6 @@ import foo.RobotControl;
 public class MainApp {
 
     public static void main(String[] args) throws IOException, AWTException {
-        WebSocketImpl.DEBUG = false;
         int port = 8887; // 843 flash policy port
 
         RobotControl control = new RobotControl();
@@ -24,12 +21,14 @@ public class MainApp {
         RemoteServer s = new RemoteServer(port, control);
         s.start();
 
-        System.out.println( "ChatServer started on port: " + s.getPort() );
+        System.out.println( "ChatServer started on IP: " + InetAddress.getLocalHost().getHostAddress() + " port: " + s.getPort() );
+//        System.out.println();
 
         BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
         while ( true ) {
             String in = sysin.readLine();
         }
+
     }
 
 }

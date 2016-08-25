@@ -23,6 +23,20 @@ public class RobotControl {
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     }
 
+    public void mouseGlide(int x1, int y1, int x2, int y2, int t, int n) {
+        try {
+            double dx = (x2 - x1) / ((double) n);
+            double dy = (y2 - y1) / ((double) n);
+            double dt = t / ((double) n);
+            for (int step = 1; step <= n; step++) {
+                Thread.sleep((int) dt);
+                robot.mouseMove((int) (x1 + dx * step), (int) (y1 + dy * step));
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void move(int deltaX, int deltaY) {
 
         Point b = MouseInfo.getPointerInfo().getLocation();
@@ -32,9 +46,11 @@ public class RobotControl {
 
         Point pos = cleanPosition(cursor_x, cursor_y);
 
-        System.out.println(String.format("Position: %d,%d", pos.x, pos.y));
+        mouseGlide((int) b.getX(), (int) b.getY(), cursor_x, cursor_y, 1, 30);
 
-        robot.mouseMove(pos.x, pos.y);
+//        System.out.println(String.format("Position: %d,%d", pos.x, pos.y));
+//
+//        robot.mouseMove(pos.x, pos.y);
     }
 
     public void click() {

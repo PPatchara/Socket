@@ -1,0 +1,68 @@
+{
+	"product_list": [
+		{
+			"category": "Clothing",
+			"subcategory": "Dress",
+			"id": "CD001",
+			"name": "Lace Shift Dress",
+			"price":  "$39",
+			"size": ["XS","S","M","L"],
+			"colors": [
+				{
+					"name": "white",
+					"code": "#ffffff",
+					"image": "dress_white_shoe_taupe.jpg"
+				},
+				{
+					"name": "cream",
+					"code": "#f5eedc",
+					"image": "dress_cream_shoe_taupe.jpg"
+				},
+				{
+					"name": "pink",
+					"code": "#f9dbe7",
+					"image": "dress_pink_shoe_taupe.jpg"
+				}],
+			"description": "This shift dress features an all-over floral embroidery covering to display a dramatic sophistication while keeping it elegant and chic from brunch to cocktails.",
+			"details": [
+				"65% Nylon. 35% Strands",
+				"Round neckline",
+				"Long sleeves",
+				"Front button closure",
+				"A-line silhouette",
+				"Regular fit",
+				"Inner lining"
+			]
+		},
+		{
+			"category": "Shoes",
+			"subcategory": "Heels",
+			"id": "SH001",
+			"name": "Handjive High Heels",
+			"price": "$39",
+			"size": ["5","5.5","6","6.5","7","7.5","8","8.5","9","9.5","10"],
+			"colors": [
+				{
+					"name": "taupe",
+					"code": "#d1b296",
+					"image": "dress_white_shoe_taupe.jpg"
+				},
+				{
+					"name": "oldrose",
+					"code": "#e79679",
+					"image": "dress_white_shoe_oldrose.jpg"
+				}
+			],
+			"description": "Adorn your style of the day with the sleek heels which are crafted from suede leather into almond toecap and complete the high end touch through the man made insole for comfortable wear.",
+			"details": [
+				"Genuine leather upper",
+				"Almond toecap",
+				"Balance man made",
+				"Genuine leather inner",
+				"Rubber outsole",
+				"Fit trues to size",
+				"Heel heights 8.5 cm / 3.5\""
+			]
+		}
+	]
+}

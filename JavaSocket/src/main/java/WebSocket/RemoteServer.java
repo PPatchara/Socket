@@ -3,14 +3,12 @@ package WebSocket;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.event.InputEvent;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Collection;
-import java.util.Set;
 
 import foo.RobotControl;
 
@@ -20,6 +18,8 @@ import foo.RobotControl;
 public class RemoteServer extends WebSocketServer{
 
     private RobotControl control;
+
+    private JSONObject currentProduct;
 
     public RemoteServer(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -49,24 +49,53 @@ public class RemoteServer extends WebSocketServer{
 
     @Override
     public void onMessage(WebSocket webSocket, String s) {
-        System.out.println("Data: " + s );
+        try {
+            JSONObject jsonObject = new JSONObject(s);
 
-        String[] stringList = s.split(",");
+            switch(jsonObject.getString("action")) {
+                case "pos":
+                    mouseControl(jsonObject); break;
+                case "current_product":
+                    setCurrentProduct(jsonObject);
+                    sendToAll(jsonObject); break;
+                case "trigger_mode":
+                    triggerMode(jsonObject); break;
+                case "tap":
+                    control.click(); break;
+                case "forward_swipe":
+                case "backward_swipe":
+                    sendToAll(jsonObject); break;
+            }
 
-        if(stringList.length <= 1) return;
+            System.out.println(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-        if(stringList[0].equalsIgnoreCase("pos")) {
-            controlProcess(stringList);
-        }
-        if (stringList[0].equalsIgnoreCase("s_event")){
-            eventProcess(stringList);
-        }
-        if (stringList[0].equalsIgnoreCase("tap")){
-            control.click();
-        }
-        else {
+    private void mouseControl(JSONObject jsonObject) throws JSONException {
+        int deltaX = jsonObject.getInt("delta_x");
+        int deltaY = jsonObject.getInt("delta_y");
 
+        control.move(deltaX, deltaY);
+    }
+
+
+    private void setCurrentProduct(JSONObject jsonObject) {
+        this.currentProduct = jsonObject;
+    }
+
+    private void sendToAll(JSONObject jsonObject) {
+        Collection<WebSocket> connections = connections();
+        for (WebSocket webSocket: connections) {
+            webSocket.send(jsonObject.toString());
         }
+    }
+
+    private void triggerMode(JSONObject jsonObject) throws JSONException {
+        jsonObject.put("product", currentProduct);
+        System.out.println(jsonObject.toString());
+        sendToAll(jsonObject);
     }
 
     @Override
@@ -74,25 +103,6 @@ public class RemoteServer extends WebSocketServer{
         e.printStackTrace();
         if( webSocket != null ) {
             // some errors like port binding failed may not be assignable to a specific websocket
-        }
-    }
-
-    private void controlProcess(String[] str) {
-        int posX = Integer.parseInt(str[1]);
-        int posY = Integer.parseInt(str[2]);
-
-        control.move(posX, posY);
-    }
-
-    private void eventProcess(String[] str) {
-        Collection<WebSocket> connections = connections();
-
-        String trigger = str[1];
-        String data = String.format("s_event,%s", trigger);
-
-
-        for (WebSocket webSocket: connections) {
-            webSocket.send(data);
         }
     }
 }
