@@ -51,20 +51,19 @@ public class RemoteServer extends WebSocketServer{
     public void onMessage(WebSocket webSocket, String s) {
         try {
             JSONObject jsonObject = new JSONObject(s);
+            String action = jsonObject.getString("action");
 
-            switch(jsonObject.getString("action")) {
-                case "pos":
-                    mouseControl(jsonObject); break;
-                case "current_product":
-                    setCurrentProduct(jsonObject);
-                    sendToAll(jsonObject); break;
-                case "trigger_mode":
-                    triggerMode(jsonObject); break;
-                case "tap":
-                    control.click(); break;
-                case "forward_swipe":
-                case "backward_swipe":
-                    sendToAll(jsonObject); break;
+            if (action.equals("pos")) {
+                mouseControl(jsonObject);
+            } else if (action.equals("current_product")) {
+                setCurrentProduct(jsonObject);
+                sendToAll(jsonObject);
+            } else if (action.equals("trigger_mode")) {
+                triggerMode(jsonObject);
+            } else if (action.equals("tap")) {
+                control.click();
+            } else if (action.equals("forward_swipe") || action.equals("backward_swipe")) {
+                sendToAll(jsonObject);
             }
 
             System.out.println(jsonObject.toString());
