@@ -130,6 +130,7 @@ public class RemoteServer extends WebSocketServer{
 
     private void triggerMode(JSONObject jsonObject) throws JSONException {
         jsonObject.put("product", currentProduct);
+        log.info("Triggered");
         System.out.println(jsonObject.toString());
         sendToAll(jsonObject);
     }
