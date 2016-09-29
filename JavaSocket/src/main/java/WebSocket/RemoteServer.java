@@ -105,10 +105,12 @@ public class RemoteServer extends WebSocketServer{
     }
 
     private void tilt(JSONObject jsonObject) {
+        log.info(jsonObject.getString("action"));
         sendToAll(jsonObject);
     }
 
     private void swipe(JSONObject jsonObject) {
+        log.info(jsonObject.getString("action"));
         sendToAll(jsonObject);
     }
 
