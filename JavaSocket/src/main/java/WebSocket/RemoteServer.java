@@ -68,7 +68,6 @@ public class RemoteServer extends WebSocketServer{
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
         System.out.println( webSocket.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
         System.out.println( "Open Size: " + connections().size() );
-
     }
 
     @Override
@@ -93,15 +92,25 @@ public class RemoteServer extends WebSocketServer{
             } else if (action.equals("tap")) {
                 click();
             } else if (action.equals("forward_swipe") || action.equals("backward_swipe")) {
-                sendToAll(jsonObject);
-            } else if (action.equals("TiltDown") || action.equals("TiltDown")) {
-                sendToAll(jsonObject);
+                swipe(jsonObject);
+            } else if (action.equals("TiltUp") || action.equals("TiltDown")) {
+                tilt(jsonObject);
             }
 
             System.out.println(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void tilt(JSONObject jsonObject) {
+        log.info(jsonObject.getString("action"));
+        sendToAll(jsonObject);
+    }
+
+    private void swipe(JSONObject jsonObject) {
+        log.info(jsonObject.getString("action"));
+        sendToAll(jsonObject);
     }
 
     private void click() {
