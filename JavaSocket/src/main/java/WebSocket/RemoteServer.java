@@ -93,15 +93,23 @@ public class RemoteServer extends WebSocketServer{
             } else if (action.equals("tap")) {
                 click();
             } else if (action.equals("forward_swipe") || action.equals("backward_swipe")) {
-                sendToAll(jsonObject);
+                swipe(jsonObject);
             } else if (action.equals("Up") || action.equals("Down")) {
-                sendToAll(jsonObject);
+                tilt(jsonObject);
             }
 
             System.out.println(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void tilt(JSONObject jsonObject) {
+        sendToAll(jsonObject);
+    }
+
+    private void swipe(JSONObject jsonObject) {
+        sendToAll(jsonObject);
     }
 
     private void click() {
