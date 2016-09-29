@@ -94,6 +94,8 @@ public class RemoteServer extends WebSocketServer{
                 click();
             } else if (action.equals("forward_swipe") || action.equals("backward_swipe")) {
                 sendToAll(jsonObject);
+            } else if (action.equals("Up") || action.equals("Down")) {
+                sendToAll(jsonObject);
             }
 
             System.out.println(jsonObject.toString());
