@@ -85,8 +85,8 @@ public class RemoteServer extends WebSocketServer{
 
             if (action.equals("pos")) {
                 mouseControl(jsonObject);
-            } else if (action.equals("current_product")) {
-                setCurrentProduct(jsonObject);
+            } else if (action.equals("current_selected")) {
+//                setCurrentProduct(jsonObject);
                 sendToAll(jsonObject);
             } else if (action.equals("trigger_mode")) {
                 triggerMode(jsonObject);
