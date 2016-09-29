@@ -68,7 +68,6 @@ public class RemoteServer extends WebSocketServer{
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
         System.out.println( webSocket.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
         System.out.println( "Open Size: " + connections().size() );
-
     }
 
     @Override
