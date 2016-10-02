@@ -27,7 +27,7 @@ public class RemoteServer extends WebSocketServer{
 
     private Logger log = Logger.getLogger(this.getClass().getName());
     private RobotControl control;
-    private JSONObject currentProduct;
+    private JSONObject event;
     private FileHandler fh;
 
     private void init() {
@@ -82,18 +82,19 @@ public class RemoteServer extends WebSocketServer{
             JSONObject jsonObject = new JSONObject(s);
             String action = jsonObject.getString("action");
 
-            if (action.equals("pos")) {
-                mouseControl(jsonObject);
-            } else if (action.equals("current_selected")) {
-//                setCurrentProduct(jsonObject);
+            if (action.equals("current_event")) {
+                currentEvent(jsonObject);
+                scenario(jsonObject);
+                setCurrentEvent(jsonObject);
                 sendToAll(jsonObject);
-            } else if (action.equals("trigger_mode")) {
-                triggerMode(jsonObject);
             } else if (action.equals("tap")) {
                 click();
             } else if (action.equals("forward_swipe") || action.equals("backward_swipe")) {
                 swipe(jsonObject);
-            } else if (action.equals("TiltUp") || action.equals("TiltDown")) {
+            } else if (action.equals("TiltUp")) {
+                tilt(jsonObject);
+                triggerMode(jsonObject);
+            } else if (action.equals("TiltDown")) {
                 tilt(jsonObject);
             }
 
@@ -101,6 +102,11 @@ public class RemoteServer extends WebSocketServer{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void scenario(JSONObject jsonObject) {
+        log.info(jsonObject.getString("scenario"));
+        sendToAll(jsonObject);
     }
 
     private void tilt(JSONObject jsonObject) {
@@ -113,24 +119,39 @@ public class RemoteServer extends WebSocketServer{
         sendToAll(jsonObject);
     }
 
+    private void currentEvent(JSONObject jsonObject) throws JSONException {
+        log.info(jsonObject.getString("event_id"));
+        sendToAll(jsonObject);
+    }
+
+        private void setCurrentEvent(JSONObject jsonObject) {
+        this.event = jsonObject;
+    }
+
+    private void triggerMode(JSONObject jsonObject) throws JSONException {
+        jsonObject.put("event", event);
+        sendToAll(jsonObject);
+    }
+
     private void click() {
         log.info("Clicked");
         control.click();
     }
 
-    private void mouseControl(JSONObject jsonObject) throws JSONException {
-        int deltaX = jsonObject.getInt("delta_x");
-        int deltaY = jsonObject.getInt("delta_y");
-        String message = String.format("Moved : (%d,%d)", deltaX, deltaY);
-        log.info(message);
 
-        control.move(deltaX, deltaY);
-    }
+//    private void mouseControl(JSONObject jsonObject) throws JSONException {
+//        int deltaX = jsonObject.getInt("delta_x");
+//        int deltaY = jsonObject.getInt("delta_y");
+//        String message = String.format("Moved : (%d,%d)", deltaX, deltaY);
+//        log.info(message);
+//
+//        control.move(deltaX, deltaY);
+//    }
 
 
-    private void setCurrentProduct(JSONObject jsonObject) {
-        this.currentProduct = jsonObject;
-    }
+//    private void setCurrentProduct(JSONObject jsonObject) {
+//        this.currentProduct = jsonObject;
+//    }
 
     private void sendToAll(JSONObject jsonObject) {
         Collection<WebSocket> connections = connections();
@@ -139,12 +160,12 @@ public class RemoteServer extends WebSocketServer{
         }
     }
 
-    private void triggerMode(JSONObject jsonObject) throws JSONException {
-        jsonObject.put("product", currentProduct);
-        log.info("Triggered");
-        System.out.println(jsonObject.toString());
-        sendToAll(jsonObject);
-    }
+//    private void triggerMode(JSONObject jsonObject) throws JSONException {
+//        jsonObject.put("event", currentProduct);
+//        log.info("Triggered");
+//        System.out.println(jsonObject.toString());
+//        sendToAll(jsonObject);
+//    }
 
     @Override
     public void onError(WebSocket webSocket, Exception e) {
