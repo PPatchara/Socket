@@ -91,11 +91,9 @@ public class RemoteServer extends WebSocketServer{
                 click();
             } else if (action.equals("forward_swipe") || action.equals("backward_swipe")) {
                 swipe(jsonObject);
-            } else if (action.equals("TiltUp")) {
+            } else if (action.equals("TiltUp") || action.equals("TiltDown")) { //revised
                 tilt(jsonObject);
                 triggerMode(jsonObject);
-            } else if (action.equals("TiltDown")) {
-                tilt(jsonObject);
             }
 
             System.out.println(jsonObject.toString());
@@ -128,9 +126,16 @@ public class RemoteServer extends WebSocketServer{
         this.event = jsonObject;
     }
 
-    private void triggerMode(JSONObject jsonObject) throws JSONException {
-        jsonObject.put("event", event);
-        sendToAll(jsonObject);
+    private void triggerMode(JSONObject jsonObject) throws JSONException { //revised
+//        String action = jsonObject.getString("action");
+//        if (action.equals("TiltUp")) {
+            jsonObject.put("event", event);
+            sendToAll(jsonObject);
+//        } else if (action.equals("TiltDown")) {
+//            jsonObject.put("event", "nothing");
+//            sendToAll(jsonObject);
+//        }
+
     }
 
     private void click() {
