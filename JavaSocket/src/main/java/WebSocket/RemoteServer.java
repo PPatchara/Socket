@@ -52,6 +52,7 @@ public class RemoteServer extends WebSocketServer{
 
     public RemoteServer(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
+        event = new JSONObject();
     }
 
     public RemoteServer(int port, RobotControl control) throws UnknownHostException {
@@ -85,21 +86,31 @@ public class RemoteServer extends WebSocketServer{
             if (action.equals("current_event")) {
                 currentEvent(jsonObject);
                 scenario(jsonObject);
+                System.out.println("current: " + jsonObject.toString());
                 setCurrentEvent(jsonObject);
+                System.out.println("after set: " + event.toString());
                 sendToAll(jsonObject);
             } else if (action.equals("tap")) {
                 click();
             } else if (action.equals("forward_swipe") || action.equals("backward_swipe")) {
                 swipe(jsonObject);
-            } else if (action.equals("TiltUp") || action.equals("TiltDown")) { //revised
+            } else if (action.equals("TiltUp")) {
                 tilt(jsonObject);
                 triggerMode(jsonObject);
+            } else if (action.equals("TiltDown")) {
+                tilt(jsonObject);
+            } else if (action.equals("save")) {
+                save(jsonObject);
             }
 
             System.out.println(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void save(JSONObject jsonObject) {
+        log.info(jsonObject.getString("saved_id"));
     }
 
     private void scenario(JSONObject jsonObject) {
@@ -122,20 +133,17 @@ public class RemoteServer extends WebSocketServer{
         sendToAll(jsonObject);
     }
 
-        private void setCurrentEvent(JSONObject jsonObject) {
+    private void setCurrentEvent(JSONObject jsonObject) {
+        System.out.println("set: " + jsonObject.toString());
         this.event = jsonObject;
+        System.out.println("event: " + event.toString());
     }
 
-    private void triggerMode(JSONObject jsonObject) throws JSONException { //revised
-//        String action = jsonObject.getString("action");
-//        if (action.equals("TiltUp")) {
+    private void triggerMode(JSONObject jsonObject) throws JSONException {
+
             jsonObject.put("event", event);
             sendToAll(jsonObject);
-//        } else if (action.equals("TiltDown")) {
-//            jsonObject.put("event", "nothing");
-//            sendToAll(jsonObject);
-//        }
-
+//            System.out.println("trigger: " + jsonObject.toString());
     }
 
     private void click() {
