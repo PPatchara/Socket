@@ -101,12 +101,18 @@ public class RemoteServer extends WebSocketServer{
                 tilt(jsonObject);
             } else if (action.equals("save")) {
                 save(jsonObject);
+            }else if (action.equals("clear")) {
+                clearEvent();
             }
 
             System.out.println(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void clearEvent () {
+        log.info("clear");
     }
 
     private void save(JSONObject jsonObject) {
